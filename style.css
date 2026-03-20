@@ -26,6 +26,25 @@ body {
   height: 50%;
 }
 
+.row3 {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 20px;
+  background: #050505;
+  border-top: 1px solid #222;
+}
+
+.footer-logo {
+  height: 40px;
+}
+
+.footer-center {
+  font-family: monospace;
+  font-size: 20px;
+  letter-spacing: 2px;
+}
+
 .row1 { height: 50%; }
 .row2 { height: 33.33%; }
 .row3 { height: 16.67%; }
