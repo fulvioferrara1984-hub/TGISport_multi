@@ -108,6 +108,35 @@ async function fetchFeed(url) {
   return await res.text();
 }
 
+function fitEmbeddedDashboard() {
+  const iframe = document.getElementById("dashboard-embed");
+  if (!iframe) return;
+
+  function applyScale() {
+    try {
+      const doc = iframe.contentDocument || iframe.contentWindow.document;
+      if (!doc || !doc.body) return;
+
+      // riduce leggermente tutto il contenuto interno
+      doc.body.style.zoom = "0.94";
+
+      // opzionale: elimina margini inutili
+      doc.body.style.margin = "0";
+
+      // se serve ancora un filo più piccolo, prova 0.92 o 0.90
+    } catch (e) {
+      console.log("Impossibile ridimensionare l'iframe:", e);
+    }
+  }
+
+  iframe.addEventListener("load", applyScale);
+
+  // tentativo iniziale nel caso la pagina sia già pronta
+  setTimeout(applyScale, 1000);
+}
+
+fitEmbeddedDashboard();
+
 async function loadCrawl() {
   const crawlContent = document.getElementById("crawl-content");
   const crawlClone = document.getElementById("crawl-content-clone");
