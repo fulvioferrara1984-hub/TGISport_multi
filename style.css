@@ -26,6 +26,10 @@ body {
   height: 50%;
 }
 
+.row1 { height: 50%; }
+.row2 { height: 33.33%; }
+.row3 { height: 16.67%; }
+
 /* CELLE */
 .cell {
   flex: 1;
@@ -37,6 +41,12 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+.vertical img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain; /* 👈 IMPORTANTISSIMO */
 }
 
 /* FORMATO 16:9 */
