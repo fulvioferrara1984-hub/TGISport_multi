@@ -41,7 +41,12 @@ function updateClocks() {
     });
 
     const div = document.createElement("div");
-    div.innerText = `${city.name}: ${time}`;
+    div.className = "clock";
+    div.innerHTML = `
+      <div class="city">${city.name}</div>
+      <div class="time">${time}</div>
+    `;
+
     container.appendChild(div);
   });
 }
