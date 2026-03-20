@@ -1,12 +1,8 @@
-/* =========================
-   SLIDESHOW NEXUS
-========================= */
 const nexusImages = [
   "./Nexus_1.png",
   "./Nexus_2.png",
   "./Nexus_3.png",
-  "./Nexus_4.png",
-  "./Nexus_5.png"
+  "./Nexus_4.png"
 ];
 
 let nexusIndex = 0;
@@ -14,19 +10,13 @@ let nexusIndex = 0;
 function updateNexus() {
   const img = document.getElementById("nexus-slideshow");
   if (!img) return;
-
   img.src = nexusImages[nexusIndex];
-  img.onerror = () => console.log("Nexus non trovata:", img.src);
-
   nexusIndex = (nexusIndex + 1) % nexusImages.length;
 }
 
 setInterval(updateNexus, 10000);
 updateNexus();
 
-/* =========================
-   SLIDESHOW GRAFICO
-========================= */
 const graficoImages = [
   "./Grafico_1.png",
   "./Grafico_2.png",
@@ -45,22 +35,16 @@ let graficoIndex = 0;
 function updateGrafico() {
   const img = document.getElementById("grafico-slideshow");
   if (!img) return;
-
   img.src = graficoImages[graficoIndex];
-  img.onerror = () => console.log("Grafico non trovato:", img.src);
-
   graficoIndex = (graficoIndex + 1) % graficoImages.length;
 }
 
-setInterval(updateGrafico, 3000);
+setInterval(updateGrafico, 10000);
 updateGrafico();
 
-/* =========================
-   OROLOGI MONDO
-========================= */
 const cities = [
-  { name: "Rome", tz: "Europe/Rome" },
-  { name: "London", tz: "Europe/London" },
+  { name: "Roma", tz: "Europe/Rome" },
+  { name: "Londra", tz: "Europe/London" },
   { name: "New York", tz: "America/New_York" },
   { name: "Tokyo", tz: "Asia/Tokyo" },
   { name: "Dubai", tz: "Asia/Dubai" }
@@ -93,130 +77,51 @@ function updateClocks() {
 setInterval(updateClocks, 1000);
 updateClocks();
 
-/* =========================
-   CRAWL FEED SPORTIVO
-========================= */
-const FEEDS = [
-  "https://feeds.bbci.co.uk/sport/rss.xml",
-  "https://www.skysports.com/rss/12040"
-];
-
-async function fetchFeed(url) {
-  const proxy = `https://api.allorigins.win/raw?url=${encodeURIComponent(url)}`;
-  const res = await fetch(proxy, { cache: "no-store" });
-  if (!res.ok) throw new Error(`Feed error: ${res.status}`);
-  return await res.text();
-}
-
+/* Zoom solo dentro la dashboard embeddeda */
 function fitEmbeddedDashboard() {
   const iframe = document.getElementById("dashboard-embed");
   if (!iframe) return;
 
-  function applyScale() {
+  const applyZoom = () => {
     try {
       const doc = iframe.contentDocument || iframe.contentWindow.document;
       if (!doc || !doc.body) return;
 
-      // riduce leggermente tutto il contenuto interno
-      doc.body.style.zoom = "0.90";
-
-      // opzionale: elimina margini inutili
+      doc.body.style.zoom = "0.93";
       doc.body.style.margin = "0";
-
-      // se serve ancora un filo più piccolo, prova 0.92 o 0.90
-    } catch (e) {
-      console.log("Impossibile ridimensionare l'iframe:", e);
+      doc.body.style.overflow = "hidden";
+    } catch (err) {
+      console.log("Zoom iframe non applicato:", err);
     }
-  }
+  };
 
-  iframe.addEventListener("load", applyScale);
-
-  // tentativo iniziale nel caso la pagina sia già pronta
-  setTimeout(applyScale, 1000);
+  iframe.addEventListener("load", () => {
+    applyZoom();
+    setTimeout(applyZoom, 300);
+    setTimeout(applyZoom, 1000);
+  });
 }
 
 fitEmbeddedDashboard();
 
-async function loadCrawl() {
+/* Crawl minimale sicuro */
+function loadCrawlFallback() {
   const crawlContent = document.getElementById("crawl-content");
   const crawlClone = document.getElementById("crawl-content-clone");
-
   if (!crawlContent || !crawlClone) return;
 
-  try {
-    let xmlText = null;
+  const html = `
+    <span class="crawl-item">
+      <span class="source">SPORT</span>
+      <a href="https://www.bbc.com/sport" target="_blank" rel="noopener noreferrer">
+        Latest international sports headlines
+      </a>
+      <span class="crawl-sep">•</span>
+    </span>
+  `;
 
-    for (const feed of FEEDS) {
-      try {
-        xmlText = await fetchFeed(feed);
-        if (xmlText) break;
-      } catch (e) {
-        console.log("Feed fallito:", feed, e);
-      }
-    }
-
-    if (!xmlText) {
-      throw new Error("Nessun feed disponibile");
-    }
-
-    const parser = new DOMParser();
-    const xmlDoc = parser.parseFromString(xmlText, "text/xml");
-    const items = [...xmlDoc.querySelectorAll("item")].slice(0, 12);
-
-    if (!items.length) {
-      throw new Error("Nessun item trovato nel feed");
-    }
-
-    const html = items.map((item) => {
-      const title = item.querySelector("title")?.textContent?.trim() || "";
-      const link = item.querySelector("link")?.textContent?.trim() || "#";
-
-      return `
-        <span class="crawl-item">
-          <span class="source">SPORT</span>
-          <a href="${link}" target="_blank" rel="noopener noreferrer">${escapeHtml(title)}</a>
-          <span class="crawl-sep">•</span>
-        </span>
-      `;
-    }).join("");
-
-    crawlContent.innerHTML = html;
-    crawlClone.innerHTML = html;
-    resetCrawlAnimation();
-
-  } catch (error) {
-    console.error("Errore crawl:", error);
-
-    const fallback = `
-      <span class="crawl-item">
-        <span class="source">SPORT</span>
-        <a href="https://www.bbc.com/sport" target="_blank" rel="noopener noreferrer">
-          Feed momentaneamente non disponibile
-        </a>
-        <span class="crawl-sep">•</span>
-      </span>
-    `;
-
-    crawlContent.innerHTML = fallback;
-    crawlClone.innerHTML = fallback;
-    resetCrawlAnimation();
-  }
+  crawlContent.innerHTML = html;
+  crawlClone.innerHTML = html;
 }
 
-function resetCrawlAnimation() {
-  const track = document.getElementById("crawl-track");
-  if (!track) return;
-
-  track.style.animation = "none";
-  void track.offsetWidth;
-  track.style.animation = "";
-}
-
-function escapeHtml(str) {
-  const div = document.createElement("div");
-  div.textContent = str;
-  return div.innerHTML;
-}
-
-loadCrawl();
-setInterval(loadCrawl, 300000);
+loadCrawlFallback();
