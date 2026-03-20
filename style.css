@@ -131,3 +131,33 @@ iframe.scaled {
   width: 170%;  /* compensazione */
   height: 170%;
 }
+
+.row2 {
+  display: flex;
+  height: 33.33%;
+}
+
+/* Colonne */
+.row2 .cell {
+  padding: 2px;
+}
+
+/* YouTube */
+.row2 .cell:nth-child(1) {
+  flex: 1.6;
+}
+
+/* Grafico */
+.row2 .cell:nth-child(2) {
+  flex: 0.7;
+}
+
+/* Video */
+.row2 .cell:nth-child(3) {
+  flex: 1.6;
+}
+
+/* Orologi */
+.row2 .cell:nth-child(4) {
+  flex: 0.7;
+}
