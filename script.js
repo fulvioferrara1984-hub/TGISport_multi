@@ -34,8 +34,8 @@ updateGrafico();
    OROLOGI MONDO
 ========================= */
 const cities = [
-  { name: "Roma", tz: "Europe/Rome" },
-  { name: "Londra", tz: "Europe/London" },
+  { name: "Rome", tz: "Europe/Rome" },
+  { name: "London", tz: "Europe/London" },
   { name: "New York", tz: "America/New_York" },
   { name: "Tokyo", tz: "Asia/Tokyo" },
   { name: "Dubai", tz: "Asia/Dubai" }
