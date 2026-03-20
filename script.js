@@ -73,8 +73,17 @@ updateClocks();
    - usa feed ufficiale ESPN
    - fetch via proxy CORS
 ========================= */
-const ESPN_RSS_URL = "https://www.espn.com/espn/rss/news";
-const CORS_PROXY_URL = `https://api.allorigins.win/raw?url=${encodeURIComponent(ESPN_RSS_URL)}`;
+const FEEDS = [
+  "https://feeds.bbci.co.uk/sport/rss.xml",
+  "https://www.skysports.com/rss/12040"
+];
+
+async function fetchFeed(url) {
+  const proxy = `https://api.allorigins.win/raw?url=${encodeURIComponent(url)}`;
+  const res = await fetch(proxy);
+  if (!res.ok) throw new Error("Feed error");
+  return await res.text();
+}
 
 async function loadCrawl() {
   const crawlContent = document.getElementById("crawl-content");
@@ -82,40 +91,45 @@ async function loadCrawl() {
 
   if (!crawlContent || !crawlClone) return;
 
-  try {
-    const response = await fetch(CORS_PROXY_URL, { cache: "no-store" });
-    if (!response.ok) {
-      throw new Error(`HTTP ${response.status}`);
-    }
+  let xmlText = null;
 
-    const xmlText = await response.text();
-    const parser = new DOMParser();
-    const xmlDoc = parser.parseFromString(xmlText, "text/xml");
-    const items = [...xmlDoc.querySelectorAll("item")].slice(0, 12);
+  // prova i feed uno alla volta
+  for (let feed of FEEDS) {
+    try {
+      xmlText = await fetchFeed(feed);
+      if (xmlText) break;
+    } catch (e) {}
+  }
 
-    if (!items.length) {
-      throw new Error("No RSS items found");
-    }
+  if (!xmlText) {
+    crawlContent.innerHTML = "⚠️ Feed non disponibile";
+    crawlClone.innerHTML = "⚠️ Feed non disponibile";
+    return;
+  }
 
-    const html = items
-      .map((item) => {
-        const title = item.querySelector("title")?.textContent?.trim() || "";
-        const link = item.querySelector("link")?.textContent?.trim() || "#";
-        return `
-          <span class="crawl-item">
-            <span class="source">ESPN</span>
-            <a href="${link}" target="_blank" rel="noopener noreferrer">${escapeHtml(title)}</a>
-            <span class="crawl-sep">•</span>
-          </span>
-        `;
-      })
-      .join("");
+  const parser = new DOMParser();
+  const xmlDoc = parser.parseFromString(xmlText, "text/xml");
 
-    crawlContent.innerHTML = html;
-    crawlClone.innerHTML = html;
+  const items = [...xmlDoc.querySelectorAll("item")].slice(0, 12);
 
-    resetCrawlAnimation();
-  } catch (error) {
+  const html = items.map(item => {
+    const title = item.querySelector("title")?.textContent || "";
+    const link = item.querySelector("link")?.textContent || "#";
+
+    return `
+      <span class="crawl-item">
+        <span class="source">SPORT</span>
+        <a href="${link}" target="_blank">${title}</a>
+        <span class="crawl-sep">•</span>
+      </span>
+    `;
+  }).join("");
+
+  crawlContent.innerHTML = html;
+  crawlClone.innerHTML = html;
+
+  resetCrawlAnimation();
+} catch (error) {
     const fallback = `
       <span class="crawl-item">
         <span class="source">ESPN</span>
