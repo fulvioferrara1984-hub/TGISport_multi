@@ -1,43 +1,50 @@
-function updateDateTime() {
-  const now = new Date();
-  document.getElementById("datetime").innerText =
-    now.toLocaleString("it-IT");
+// NEXUS
+const nexusImages = ["Nexus_1.png", "Nexus_2.png", "Nexus_3.png"];
+let nexusIndex = 0;
+
+function updateNexus() {
+  document.getElementById("nexus-slideshow").src = nexusImages[nexusIndex];
+  nexusIndex = (nexusIndex + 1) % nexusImages.length;
 }
 
-setInterval(updateDateTime, 1000);
-updateDateTime();
+setInterval(updateNexus, 10000);
+updateNexus();
 
 
-async function loadEvents() {
-  const response = await fetch("eventi.csv");
-  const text = await response.text();
+// GRAFICO
+const graficoImages = ["Grafico_1.png", "Grafico_2.png", "Grafico_3.png"];
+let graficoIndex = 0;
 
-  const rows = text.split("\n").slice(1);
-  const events = rows.map(row => {
-    const [date, title] = row.split(",");
-    return {
-      date: new Date(date),
-      title: title
-    };
+function updateGrafico() {
+  document.getElementById("grafico-slideshow").src = graficoImages[graficoIndex];
+  graficoIndex = (graficoIndex + 1) % graficoImages.length;
+}
+
+setInterval(updateGrafico, 10000);
+updateGrafico();
+
+const cities = [
+  { name: "Roma", tz: "Europe/Rome" },
+  { name: "Londra", tz: "Europe/London" },
+  { name: "New York", tz: "America/New_York" },
+  { name: "Tokyo", tz: "Asia/Tokyo" },
+  { name: "Dubai", tz: "Asia/Dubai" }
+];
+
+function updateClocks() {
+  const container = document.getElementById("clocks");
+  container.innerHTML = "";
+
+  cities.forEach(city => {
+    const time = new Date().toLocaleTimeString("it-IT", {
+      timeZone: city.tz
+    });
+
+    const div = document.createElement("div");
+    div.innerText = `${city.name}: ${time}`;
+    container.appendChild(div);
   });
-
-  const now = new Date();
-
-  const nextEvent = events
-    .filter(e => e.date > now)
-    .sort((a, b) => a.date - b.date)[0];
-
-  if (nextEvent) {
-    document.getElementById("next-event").innerText =
-      "Prossimo evento: " +
-      nextEvent.title +
-      " (" +
-      nextEvent.date.toLocaleDateString("it-IT") +
-      ")";
-  } else {
-    document.getElementById("next-event").innerText =
-      "Nessun evento futuro";
-  }
 }
 
-loadEvents();
+setInterval(updateClocks, 1000);
+updateClocks();
