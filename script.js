@@ -1,7 +1,7 @@
 /* =========================
    SLIDESHOW NEXUS
 ========================= */
-const nexusImages = ["Nexus_1.png", "Nexus_2.png", "Nexus_3.png"];
+const nexusImages = ["Nexus_1.png", "Nexus_2.png", "Nexus_3.png", "Nexus_4.png"];
 let nexusIndex = 0;
 
 function updateNexus() {
@@ -17,7 +17,7 @@ updateNexus();
 /* =========================
    SLIDESHOW GRAFICO
 ========================= */
-const graficoImages = ["Grafico_1.png", "Grafico_2.png", "Grafico_3.png"];
+const graficoImages = ["Grafico_1.png", "Grafico_2.png", "Grafico_3.png", "Grafico_4.png", "Grafico_5.png", "Grafico_6.png", "Grafico_7.png", "Grafico_8.png", "Grafico_9.png", "Grafico_10.png"];
 let graficoIndex = 0;
 
 function updateGrafico() {
