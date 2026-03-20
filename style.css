@@ -124,3 +124,10 @@ img {
 .time {
   font-size: 18px;
 }
+
+iframe.scaled {
+  transform: scale(0.8);   /* prova 0.7–0.9 */
+  transform-origin: top left;
+  width: 125%;  /* compensazione */
+  height: 125%;
+}
