@@ -93,19 +93,11 @@ body {
 
 /* Dashboard embeddato: scala leggermente ridotta */
 .dashboard-frame {
-  width: 133%;
-  height: 133%;
-  transform: scale(0.75);
-  transform-origin: top left;
-  border: none;
-  background: #000;
-}
-
-iframe.scaled {
   width: 100%;
   height: 100%;
-  transform: none;
   border: none;
+  background: #000;
+  display: block;
 }
 
 /* YouTube e video */
