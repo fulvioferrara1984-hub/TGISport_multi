@@ -13,8 +13,8 @@ body {
 }
 
 .yt-frame {
-  width: 120%;
-  height: 120%;
+  width: 150%;
+  height: 150%;
   border: none;
 }
 
@@ -126,8 +126,8 @@ img {
 }
 
 iframe.scaled {
-  transform: scale(0.6);   /* prova 0.7–0.9 */
+  transform: scale(0.5);   /* prova 0.7–0.9 */
   transform-origin: top left;
-  width: 160%;  /* compensazione */
-  height: 160%;
+  width: 170%;  /* compensazione */
+  height: 170%;
 }
