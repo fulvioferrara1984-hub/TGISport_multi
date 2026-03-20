@@ -53,3 +53,21 @@ function updateClocks() {
 
 setInterval(updateClocks, 1000);
 updateClocks();
+
+function updateDateTime() {
+  const now = new Date();
+
+  const formatted = now.toLocaleString("it-IT", {
+    day: "2-digit",
+    month: "2-digit",
+    year: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+    second: "2-digit"
+  });
+
+  document.getElementById("datetime").innerText = formatted;
+}
+
+setInterval(updateDateTime, 1000);
+updateDateTime();
