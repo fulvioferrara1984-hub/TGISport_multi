@@ -5,7 +5,8 @@ const nexusImages = [
   "./Nexus_1.png",
   "./Nexus_2.png",
   "./Nexus_3.png",
-  "./Nexus_4.png"
+  "./Nexus_4.png",
+  "./Nexus_5.png"
 ];
 
 let nexusIndex = 0;
