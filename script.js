@@ -13,6 +13,7 @@ function updateNexus() {
   const img = document.getElementById("nexus-slideshow");
   if (!img) return;
   img.src = nexusImages[nexusIndex];
+  img.onerror = () => console.log("Nexus non trovata:", img.src);
   nexusIndex = (nexusIndex + 1) % nexusImages.length;
 }
 
@@ -36,11 +37,12 @@ const graficoImages = [
 ];
 let graficoIndex = 0;
 
-function updateGrafico() {
-  const img = document.getElementById("grafico-slideshow");
+function updateNexus() {
+  const img = document.getElementById("nexus-slideshow");
   if (!img) return;
-  img.src = graficoImages[graficoIndex];
-  graficoIndex = (graficoIndex + 1) % graficoImages.length;
+  img.src = nexusImages[nexusIndex];
+  img.onerror = () => console.log("Nexus non trovata:", img.src);
+  nexusIndex = (nexusIndex + 1) % nexusImages.length;
 }
 
 setInterval(updateGrafico, 5000);
