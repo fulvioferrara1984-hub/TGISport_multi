@@ -93,9 +93,9 @@ body {
 
 /* Dashboard embeddato: scala leggermente ridotta */
 .dashboard-frame {
-  width: 130%;
-  height: 130%;
-  transform: scale(0.77);
+  width: 133%;
+  height: 133%;
+  transform: scale(0.75);
   transform-origin: top left;
   border: none;
   background: #000;
