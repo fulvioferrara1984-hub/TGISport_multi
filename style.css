@@ -1,6 +1,6 @@
 body {
   margin: 0;
-  background: black;
+  background: #000;
   color: white;
   font-family: Arial;
   overflow: hidden;
@@ -10,6 +10,12 @@ body {
   display: flex;
   flex-direction: column;
   height: 100vh;
+}
+
+.yt-frame {
+  width: 100%;
+  height: 100%;
+  border: none;
 }
 
 /* RIGHE */
@@ -39,9 +45,9 @@ body {
   height: 40px;
 }
 
-.footer-center {
+.footer-right {
   font-family: monospace;
-  font-size: 20px;
+  font-size: 18px;
   letter-spacing: 2px;
 }
 
@@ -54,6 +60,7 @@ body {
   flex: 1;
   padding: 2px;
   box-sizing: border-box;
+  border: 1px solid #111;
 }
 
 .vertical {
@@ -95,27 +102,25 @@ img {
 }
 
 .clocks {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 10px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 8px;
   padding: 10px;
   font-family: monospace;
 }
 
 .clock {
   background: #111;
-  border: 1px solid #00ffcc;
-  padding: 10px;
-  text-align: center;
-  border-radius: 8px;
+  border-left: 3px solid #00ffcc;
+  padding: 8px;
 }
 
 .city {
-  font-size: 12px;
+  font-size: 11px;
   color: #00ffcc;
 }
 
 .time {
   font-size: 18px;
-  font-weight: bold;
 }
