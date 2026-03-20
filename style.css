@@ -1,30 +1,75 @@
 body {
   margin: 0;
   background: black;
-  overflow: hidden;
+  color: white;
   font-family: Arial;
+  overflow: hidden;
 }
 
-/* LOGO */
-.logo {
-  position: fixed;
-  top: 10px;
-  right: 10px;
-  height: 30px;
-  z-index: 1000;
-}
-
-/* GRID 3 COLONNE */
-.grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
+.container {
+  display: flex;
+  flex-direction: column;
   height: 100vh;
 }
 
-/* IFRAME */
-iframe {
+/* RIGHE */
+.row {
+  display: flex;
+  width: 100%;
+}
+
+.row1 {
+  height: 50%;
+}
+
+.row2 {
+  height: 50%;
+}
+
+/* CELLE */
+.cell {
+  flex: 1;
+  padding: 2px;
+  box-sizing: border-box;
+}
+
+.vertical {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* FORMATO 16:9 */
+.ratio-16-9 {
+  position: relative;
+  width: 100%;
+  padding-top: 56.25%;
+}
+
+.ratio-16-9 iframe,
+.ratio-16-9 video,
+.ratio-16-9 img {
+  position: absolute;
+  top: 0;
+  left: 0;
   width: 100%;
   height: 100%;
   border: none;
-  background: #111;
+  object-fit: cover;
+}
+
+/* IMMAGINI */
+img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* CLOCK */
+.clocks {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 10px;
+  font-size: 18px;
 }
