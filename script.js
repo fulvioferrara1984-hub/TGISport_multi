@@ -7,13 +7,16 @@ const nexusImages = [
   "./Nexus_3.png",
   "./Nexus_4.png"
 ];
+
 let nexusIndex = 0;
 
 function updateNexus() {
   const img = document.getElementById("nexus-slideshow");
   if (!img) return;
+
   img.src = nexusImages[nexusIndex];
   img.onerror = () => console.log("Nexus non trovata:", img.src);
+
   nexusIndex = (nexusIndex + 1) % nexusImages.length;
 }
 
@@ -35,14 +38,17 @@ const graficoImages = [
   "./Grafico_9.png",
   "./Grafico_10.png"
 ];
+
 let graficoIndex = 0;
 
-function updateNexus() {
-  const img = document.getElementById("nexus-slideshow");
+function updateGrafico() {
+  const img = document.getElementById("grafico-slideshow");
   if (!img) return;
-  img.src = nexusImages[nexusIndex];
-  img.onerror = () => console.log("Nexus non trovata:", img.src);
-  nexusIndex = (nexusIndex + 1) % nexusImages.length;
+
+  img.src = graficoImages[graficoIndex];
+  img.onerror = () => console.log("Grafico non trovato:", img.src);
+
+  graficoIndex = (graficoIndex + 1) % graficoImages.length;
 }
 
 setInterval(updateGrafico, 5000);
@@ -87,9 +93,7 @@ setInterval(updateClocks, 1000);
 updateClocks();
 
 /* =========================
-   CRAWL ESPN RSS
-   - usa feed ufficiale ESPN
-   - fetch via proxy CORS
+   CRAWL FEED SPORTIVO
 ========================= */
 const FEEDS = [
   "https://feeds.bbci.co.uk/sport/rss.xml",
@@ -98,8 +102,8 @@ const FEEDS = [
 
 async function fetchFeed(url) {
   const proxy = `https://api.allorigins.win/raw?url=${encodeURIComponent(url)}`;
-  const res = await fetch(proxy);
-  if (!res.ok) throw new Error("Feed error");
+  const res = await fetch(proxy, { cache: "no-store" });
+  if (!res.ok) throw new Error(`Feed error: ${res.status}`);
   return await res.text();
 }
 
@@ -109,50 +113,55 @@ async function loadCrawl() {
 
   if (!crawlContent || !crawlClone) return;
 
-  let xmlText = null;
+  try {
+    let xmlText = null;
 
-  // prova i feed uno alla volta
-  for (let feed of FEEDS) {
-    try {
-      xmlText = await fetchFeed(feed);
-      if (xmlText) break;
-    } catch (e) {}
-  }
+    for (const feed of FEEDS) {
+      try {
+        xmlText = await fetchFeed(feed);
+        if (xmlText) break;
+      } catch (e) {
+        console.log("Feed fallito:", feed, e);
+      }
+    }
 
-  if (!xmlText) {
-    crawlContent.innerHTML = "⚠️ Feed non disponibile";
-    crawlClone.innerHTML = "⚠️ Feed non disponibile";
-    return;
-  }
+    if (!xmlText) {
+      throw new Error("Nessun feed disponibile");
+    }
 
-  const parser = new DOMParser();
-  const xmlDoc = parser.parseFromString(xmlText, "text/xml");
+    const parser = new DOMParser();
+    const xmlDoc = parser.parseFromString(xmlText, "text/xml");
+    const items = [...xmlDoc.querySelectorAll("item")].slice(0, 12);
 
-  const items = [...xmlDoc.querySelectorAll("item")].slice(0, 12);
+    if (!items.length) {
+      throw new Error("Nessun item trovato nel feed");
+    }
 
-  const html = items.map(item => {
-    const title = item.querySelector("title")?.textContent || "";
-    const link = item.querySelector("link")?.textContent || "#";
+    const html = items.map((item) => {
+      const title = item.querySelector("title")?.textContent?.trim() || "";
+      const link = item.querySelector("link")?.textContent?.trim() || "#";
 
-    return `
-      <span class="crawl-item">
-        <span class="source">SPORT</span>
-        <a href="${link}" target="_blank">${title}</a>
-        <span class="crawl-sep">•</span>
-      </span>
-    `;
-  }).join("");
+      return `
+        <span class="crawl-item">
+          <span class="source">SPORT</span>
+          <a href="${link}" target="_blank" rel="noopener noreferrer">${escapeHtml(title)}</a>
+          <span class="crawl-sep">•</span>
+        </span>
+      `;
+    }).join("");
 
-  crawlContent.innerHTML = html;
-  crawlClone.innerHTML = html;
+    crawlContent.innerHTML = html;
+    crawlClone.innerHTML = html;
+    resetCrawlAnimation();
 
-  resetCrawlAnimation();
-} catch (error) {
+  } catch (error) {
+    console.error("Errore crawl:", error);
+
     const fallback = `
       <span class="crawl-item">
-        <span class="source">ESPN</span>
-        <a href="https://www.espn.com/" target="_blank" rel="noopener noreferrer">
-          Top headlines unavailable at the moment — open ESPN for live updates.
+        <span class="source">SPORT</span>
+        <a href="https://www.bbc.com/sport" target="_blank" rel="noopener noreferrer">
+          Feed momentaneamente non disponibile
         </a>
         <span class="crawl-sep">•</span>
       </span>
@@ -160,7 +169,6 @@ async function loadCrawl() {
 
     crawlContent.innerHTML = fallback;
     crawlClone.innerHTML = fallback;
-
     resetCrawlAnimation();
   }
 }
@@ -168,6 +176,7 @@ async function loadCrawl() {
 function resetCrawlAnimation() {
   const track = document.getElementById("crawl-track");
   if (!track) return;
+
   track.style.animation = "none";
   void track.offsetWidth;
   track.style.animation = "";
