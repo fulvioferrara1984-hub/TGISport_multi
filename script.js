@@ -27,7 +27,7 @@ function updateGrafico() {
   graficoIndex = (graficoIndex + 1) % graficoImages.length;
 }
 
-setInterval(updateGrafico, 10000);
+setInterval(updateGrafico, 5000);
 updateGrafico();
 
 /* =========================
