@@ -75,11 +75,28 @@ img {
   object-fit: cover;
 }
 
-/* CLOCK */
 .clocks {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
   padding: 10px;
+  font-family: monospace;
+}
+
+.clock {
+  background: #111;
+  border: 1px solid #00ffcc;
+  padding: 10px;
+  text-align: center;
+  border-radius: 8px;
+}
+
+.city {
+  font-size: 12px;
+  color: #00ffcc;
+}
+
+.time {
   font-size: 18px;
+  font-weight: bold;
 }
