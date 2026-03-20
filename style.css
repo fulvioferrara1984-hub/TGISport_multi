@@ -126,8 +126,8 @@ img {
 }
 
 iframe.scaled {
-  transform: scale(0.7);   /* prova 0.7–0.9 */
+  transform: scale(0.6);   /* prova 0.7–0.9 */
   transform-origin: top left;
-  width: 125%;  /* compensazione */
-  height: 125%;
+  width: 140%;  /* compensazione */
+  height: 140%;
 }
