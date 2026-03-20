@@ -1,5 +1,5 @@
 // NEXUS
-const nexusImages = ["Nexus_1.png", "Nexus_2.png", "Nexus_3.png"];
+const nexusImages = ["Nexus_1.png", "Nexus_2.png", "Nexus_3.png", "Nexus_4.png"];
 let nexusIndex = 0;
 
 function updateNexus() {
