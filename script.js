@@ -118,7 +118,7 @@ function fitEmbeddedDashboard() {
       if (!doc || !doc.body) return;
 
       // riduce leggermente tutto il contenuto interno
-      doc.body.style.zoom = "0.94";
+      doc.body.style.zoom = "0.90";
 
       // opzionale: elimina margini inutili
       doc.body.style.margin = "0";
