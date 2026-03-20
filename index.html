@@ -1,68 +1,90 @@
 <!DOCTYPE html>
 <html lang="it">
 <head>
-  <meta charset="UTF-8">
-  <title>Dashboard Pro</title>
-  <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TGI Sport Multi</title>
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-
-<div class="container">
-
-  <!-- RIGA 1 -->
-  <div class="row row1">
-    <div class="cell">
-      <div class="ratio-16-9">
-        <iframe class="scaled" src="https://fulvioferrara1984-hub.github.io/TGISport_Dashboard/"></iframe>
+  <div class="container">
+    <!-- RIGA 1: invariata come ingombri -->
+    <section class="row row1">
+      <div class="cell">
+        <div class="ratio-16-9">
+          <iframe
+            class="scaled dashboard-frame"
+            src="https://fulvioferrara1984-hub.github.io/TGISport_Dashboard/"
+            title="TGI Sport Dashboard">
+          </iframe>
+        </div>
       </div>
-    </div>
 
-    <div class="cell">
-      <div class="ratio-16-9">
-        <img id="nexus-slideshow" />
+      <div class="cell">
+        <div class="ratio-16-9">
+          <img id="nexus-slideshow" alt="Nexus slideshow" />
+        </div>
       </div>
-    </div>
+    </section>
+
+    <!-- RIGA 2: più alta -->
+    <section class="row row2">
+      <div class="cell cell-video">
+        <div class="ratio-16-9">
+          <iframe
+            class="yt-frame"
+            src="https://www.youtube.com/embed/OLnWGKqsQ0s?autoplay=1&mute=1&controls=1&loop=1&playlist=OLnWGKqsQ0s&rel=0"
+            title="YouTube player"
+            allow="autoplay; encrypted-media; fullscreen; picture-in-picture"
+            allowfullscreen>
+          </iframe>
+        </div>
+      </div>
+
+      <div class="cell cell-side vertical">
+        <img id="grafico-slideshow" alt="Grafico slideshow" />
+      </div>
+
+      <div class="cell cell-video">
+        <div class="ratio-16-9">
+          <video
+            class="multiview-video"
+            src="multiview.mp4"
+            autoplay
+            muted
+            loop
+            playsinline>
+          </video>
+        </div>
+      </div>
+
+      <div class="cell cell-clocks clocks" id="clocks"></div>
+    </section>
+
+    <!-- RIGA 3: dimezzata -->
+    <section class="row row3">
+      <div class="crawl-bar">
+        <div class="crawl-logo-wrap">
+          <img src="TGILogo.png" class="crawl-logo" alt="TGI Logo" />
+        </div>
+
+        <div class="crawl-track-wrap">
+          <div class="crawl-fade-left"></div>
+          <div class="crawl-fade-right"></div>
+
+          <div class="crawl-track" id="crawl-track">
+            <div class="crawl-content" id="crawl-content">
+              <span class="crawl-item">Loading sports headlines…</span>
+            </div>
+            <div class="crawl-content" id="crawl-content-clone" aria-hidden="true">
+              <span class="crawl-item">Loading sports headlines…</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
   </div>
 
-  <!-- RIGA 2 -->
-  <div class="row row2">
-
-    <!-- col 1 -->
-    <div class="cell">
-      <div class="ratio-16-9">
-        <iframe src="https://www.youtube.com/embed/OLnWGKqsQ0s?si=w92WbiO1w3kUhHs6" allow="autoplay; fullscreen" class="yt-frame"></iframe>
-      </div>
-    </div>
-
-    <!-- col 2 -->
-    <div class="cell vertical">
-      <img id="grafico-slideshow" />
-    </div>
-
-    <!-- col 3 -->
-    <div class="cell">
-      <div class="ratio-16-9">
-        <video src="multiview.mp4" autoplay muted loop></video>
-      </div>
-    </div>
-
-    <!-- col 4 -->
-    <div class="cell vertical clocks" id="clocks"></div>
-
-  </div>
-
- <div class="row row3">
-
-  <div class="footer-left">
-    <img src="TGILogo.png" class="footer-logo">
-  </div>
-
-  <div class="footer-right" id="datetime"></div>
-
-</div>
-
-</div>
-
-<script src="script.js"></script>
+  <script src="script.js"></script>
 </body>
 </html>
