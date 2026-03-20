@@ -2,24 +2,57 @@
 <html lang="it">
 <head>
   <meta charset="UTF-8">
-  <title>Dashboard</title>
+  <title>Dashboard Pro</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-  <!-- LOGO -->
-  <img src="logo.png" class="logo">
+<div class="container">
 
-  <!-- GRID 3 PANNELLI -->
-  <div class="grid">
+  <!-- RIGA 1 -->
+  <div class="row row1">
+    <div class="cell">
+      <div class="ratio-16-9">
+        <iframe src="https://fulvioferrara1984-hub.github.io/TGISport_Dashboard/"></iframe>
+      </div>
+    </div>
 
-    <iframe src="https://fulvioferrara1984-hub.github.io/TGISport_Dashboard/"></iframe>
+    <div class="cell">
+      <div class="ratio-16-9">
+        <img id="nexus-slideshow" />
+      </div>
+    </div>
+  </div>
 
-    <iframe src="https://remotedesktop.google.com/access/session/88d41554-d2cd-06ed-83ef-4d811a3ed7eb"></iframe>
+  <!-- RIGA 2 -->
+  <div class="row row2">
 
-    <iframe src="https://nexus.isg.media"></iframe>
+    <!-- col 1 -->
+    <div class="cell">
+      <div class="ratio-16-9">
+        <iframe src="https://www.youtube.com/embed/yIiyZc0sn0E?si=2yrwOBpgkDeolXUr"></iframe>
+      </div>
+    </div>
+
+    <!-- col 2 -->
+    <div class="cell vertical">
+      <img id="grafico-slideshow" />
+    </div>
+
+    <!-- col 3 -->
+    <div class="cell">
+      <div class="ratio-16-9">
+        <video src="multiview.mp4" autoplay muted loop></video>
+      </div>
+    </div>
+
+    <!-- col 4 -->
+    <div class="cell vertical clocks" id="clocks"></div>
 
   </div>
 
+</div>
+
+<script src="script.js"></script>
 </body>
 </html>
