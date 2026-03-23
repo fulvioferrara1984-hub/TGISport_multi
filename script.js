@@ -134,35 +134,12 @@ function resizeDashboardFont() {
 resizeDashboardFont();
 
 /* =========================
-   CRAWL MULTI-SOURCE
+   CRAWL MULTI-FEED SPORT
 ========================= */
 const FEEDS = [
-  { name: "BBC Sport", url: "https://feeds.bbci.co.uk/sport/rss.xml" },
+  { name: "BBC Sport", url: "http://newsrss.bbc.co.uk/rss/sportonline_uk_edition/football/rss.xml" },
   { name: "Guardian Sport", url: "https://www.theguardian.com/uk/sport/rss" }
 ];
-
-function getProxyUrl(url) {
-  return `https://api.allorigins.win/raw?url=${encodeURIComponent(url)}`;
-}
-
-async function fetchFeed(feed) {
-  const res = await fetch(getProxyUrl(feed.url), { cache: "no-store" });
-  if (!res.ok) {
-    throw new Error(`${feed.name}: HTTP ${res.status}`);
-  }
-
-  const xmlText = await res.text();
-  const parser = new DOMParser();
-  const xmlDoc = parser.parseFromString(xmlText, "text/xml");
-
-  const items = [...xmlDoc.querySelectorAll("item")].map((item) => ({
-    source: feed.name,
-    title: item.querySelector("title")?.textContent?.trim() || "",
-    link: item.querySelector("link")?.textContent?.trim() || "#"
-  }));
-
-  return items.filter((x) => x.title && x.link);
-}
 
 function escapeHtml(str) {
   const div = document.createElement("div");
@@ -179,6 +156,33 @@ function resetCrawlAnimation() {
   track.style.animation = "";
 }
 
+async function fetchFeed(feed) {
+  const proxyUrl = `https://api.allorigins.win/get?url=${encodeURIComponent(feed.url)}`;
+  const response = await fetch(proxyUrl, { cache: "no-store" });
+
+  if (!response.ok) {
+    throw new Error(`${feed.name}: HTTP ${response.status}`);
+  }
+
+  const data = await response.json();
+  const xmlText = data.contents;
+
+  if (!xmlText) {
+    throw new Error(`${feed.name}: empty response`);
+  }
+
+  const parser = new DOMParser();
+  const xmlDoc = parser.parseFromString(xmlText, "text/xml");
+
+  const items = [...xmlDoc.querySelectorAll("item")].map((item) => ({
+    source: feed.name,
+    title: item.querySelector("title")?.textContent?.trim() || "",
+    link: item.querySelector("link")?.textContent?.trim() || "#"
+  }));
+
+  return items.filter(item => item.title && item.link);
+}
+
 async function loadCrawl() {
   const crawlContent = document.getElementById("crawl-content");
   const crawlClone = document.getElementById("crawl-content-clone");
@@ -188,26 +192,25 @@ async function loadCrawl() {
   try {
     const results = await Promise.allSettled(FEEDS.map(fetchFeed));
 
-    const allItems = results
-      .filter((r) => r.status === "fulfilled")
-      .flatMap((r) => r.value);
+    const okResults = results
+      .filter(r => r.status === "fulfilled")
+      .flatMap(r => r.value);
 
-    if (!allItems.length) {
+    if (!okResults.length) {
       throw new Error("Nessun feed disponibile");
     }
 
-    // deduplica per titolo
     const seen = new Set();
-    const uniqueItems = allItems.filter((item) => {
+    const uniqueItems = okResults.filter(item => {
       const key = item.title.toLowerCase();
       if (seen.has(key)) return false;
       seen.add(key);
       return true;
     });
 
-    const selectedItems = uniqueItems.slice(0, 20);
+    const selectedItems = uniqueItems.slice(0, 15);
 
-    const html = selectedItems.map((item) => `
+    const html = selectedItems.map(item => `
       <span class="crawl-item">
         <span class="source">${escapeHtml(item.source)}</span>
         <a href="${item.link}" target="_blank" rel="noopener noreferrer">
@@ -220,6 +223,8 @@ async function loadCrawl() {
     crawlContent.innerHTML = html;
     crawlClone.innerHTML = html;
     resetCrawlAnimation();
+
+    console.log("Crawl caricato:", selectedItems.length, "news");
   } catch (error) {
     console.error("Errore crawl:", error);
 
