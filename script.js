@@ -78,7 +78,7 @@ setInterval(updateClocks, 1000);
 updateClocks();
 
 /* Zoom solo dentro la dashboard embeddeda */
-function fitEmbeddedDashboard() {
+/*function fitEmbeddedDashboard() {
   const iframe = document.getElementById("dashboard-embed");
   if (!iframe) return;
 
@@ -100,9 +100,37 @@ function fitEmbeddedDashboard() {
     setTimeout(applyZoom, 300);
     setTimeout(applyZoom, 1000);
   });
-}
+}*/
 
 fitEmbeddedDashboard();
+
+function resizeDashboardFont() {
+  const iframe = document.getElementById("dashboard-embed");
+  if (!iframe) return;
+
+  iframe.addEventListener("load", () => {
+    try {
+      const doc = iframe.contentDocument || iframe.contentWindow.document;
+
+      if (!doc) return;
+
+      // 🔥 RIDUCE SOLO IL FONT
+      doc.body.style.fontSize = "90%";
+
+      // oppure più aggressivo:
+      // doc.body.style.fontSize = "0.9em";
+
+      // opzionale: riduce leggermente padding/margini
+      doc.body.style.padding = "0";
+      doc.body.style.margin = "0";
+
+    } catch (e) {
+      console.log("Non posso modificare iframe:", e);
+    }
+  });
+}
+
+resizeDashboardFont();
 
 /* =========================
    CRAWL MULTI-SOURCE
