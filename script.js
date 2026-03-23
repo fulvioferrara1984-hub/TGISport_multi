@@ -87,7 +87,7 @@ function fitEmbeddedDashboard() {
       const doc = iframe.contentDocument || iframe.contentWindow.document;
       if (!doc || !doc.body) return;
 
-      doc.body.style.zoom = "0.93";
+      doc.body.style.zoom = "1.00";
       doc.body.style.margin = "0";
       doc.body.style.overflow = "hidden";
     } catch (err) {
