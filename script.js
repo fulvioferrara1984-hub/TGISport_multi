@@ -133,6 +133,11 @@ function resizeDashboardFont() {
 
 resizeDashboardFont();
 
+
+// CRAWL
+/* =========================
+   CRAWL MULTI-SOURCE
+========================= */
 const FEEDS = [
   { name: "BBC Sport", url: "https://feeds.bbci.co.uk/sport/rss.xml" },
   { name: "Guardian Sport", url: "https://www.theguardian.com/uk/sport/rss" }
@@ -144,6 +149,7 @@ function getProxyUrl(url) {
 
 async function fetchFeed(feed) {
   const res = await fetch(getProxyUrl(feed.url), { cache: "no-store" });
+
   if (!res.ok) {
     throw new Error(`${feed.name}: HTTP ${res.status}`);
   }
@@ -170,6 +176,7 @@ function escapeHtml(str) {
 function resetCrawlAnimation() {
   const track = document.getElementById("crawl-track");
   if (!track) return;
+
   track.style.animation = "none";
   void track.offsetWidth;
   track.style.animation = "";
