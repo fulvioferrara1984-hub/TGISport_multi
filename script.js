@@ -118,7 +118,7 @@ function resizeDashboardFont() {
       // doc.body.style.fontSize = "90%";
 
       // oppure più aggressivo:
-      doc.body.style.fontSize = "0.8em";
+      doc.body.style.fontSize = "0.7em";
 
       // opzionale: riduce leggermente padding/margini
       doc.body.style.padding = "0";
