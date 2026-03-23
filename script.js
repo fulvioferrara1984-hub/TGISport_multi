@@ -104,24 +104,111 @@ function fitEmbeddedDashboard() {
 
 fitEmbeddedDashboard();
 
-/* Crawl minimale sicuro */
-function loadCrawlFallback() {
-  const crawlContent = document.getElementById("crawl-content");
-  const crawlClone = document.getElementById("crawl-content-clone");
-  if (!crawlContent || !crawlClone) return;
+/* =========================
+   CRAWL MULTI-SOURCE
+========================= */
+const FEEDS = [
+  { name: "BBC Sport", url: "https://feeds.bbci.co.uk/sport/rss.xml" },
+  { name: "Guardian Sport", url: "https://www.theguardian.com/uk/sport/rss" }
+];
 
-  const html = `
-    <span class="crawl-item">
-      <span class="source">SPORT</span>
-      <a href="https://www.bbc.com/sport" target="_blank" rel="noopener noreferrer">
-        Latest international sports headlines
-      </a>
-      <span class="crawl-sep">•</span>
-    </span>
-  `;
-
-  crawlContent.innerHTML = html;
-  crawlClone.innerHTML = html;
+function getProxyUrl(url) {
+  return `https://api.allorigins.win/raw?url=${encodeURIComponent(url)}`;
 }
 
-loadCrawlFallback();
+async function fetchFeed(feed) {
+  const res = await fetch(getProxyUrl(feed.url), { cache: "no-store" });
+  if (!res.ok) {
+    throw new Error(`${feed.name}: HTTP ${res.status}`);
+  }
+
+  const xmlText = await res.text();
+  const parser = new DOMParser();
+  const xmlDoc = parser.parseFromString(xmlText, "text/xml");
+
+  const items = [...xmlDoc.querySelectorAll("item")].map((item) => ({
+    source: feed.name,
+    title: item.querySelector("title")?.textContent?.trim() || "",
+    link: item.querySelector("link")?.textContent?.trim() || "#"
+  }));
+
+  return items.filter((x) => x.title && x.link);
+}
+
+function escapeHtml(str) {
+  const div = document.createElement("div");
+  div.textContent = str;
+  return div.innerHTML;
+}
+
+function resetCrawlAnimation() {
+  const track = document.getElementById("crawl-track");
+  if (!track) return;
+
+  track.style.animation = "none";
+  void track.offsetWidth;
+  track.style.animation = "";
+}
+
+async function loadCrawl() {
+  const crawlContent = document.getElementById("crawl-content");
+  const crawlClone = document.getElementById("crawl-content-clone");
+
+  if (!crawlContent || !crawlClone) return;
+
+  try {
+    const results = await Promise.allSettled(FEEDS.map(fetchFeed));
+
+    const allItems = results
+      .filter((r) => r.status === "fulfilled")
+      .flatMap((r) => r.value);
+
+    if (!allItems.length) {
+      throw new Error("Nessun feed disponibile");
+    }
+
+    // deduplica per titolo
+    const seen = new Set();
+    const uniqueItems = allItems.filter((item) => {
+      const key = item.title.toLowerCase();
+      if (seen.has(key)) return false;
+      seen.add(key);
+      return true;
+    });
+
+    const selectedItems = uniqueItems.slice(0, 20);
+
+    const html = selectedItems.map((item) => `
+      <span class="crawl-item">
+        <span class="source">${escapeHtml(item.source)}</span>
+        <a href="${item.link}" target="_blank" rel="noopener noreferrer">
+          ${escapeHtml(item.title)}
+        </a>
+        <span class="crawl-sep">•</span>
+      </span>
+    `).join("");
+
+    crawlContent.innerHTML = html;
+    crawlClone.innerHTML = html;
+    resetCrawlAnimation();
+  } catch (error) {
+    console.error("Errore crawl:", error);
+
+    const fallback = `
+      <span class="crawl-item">
+        <span class="source">SPORT</span>
+        <a href="https://www.bbc.com/sport" target="_blank" rel="noopener noreferrer">
+          News feed momentaneamente non disponibile
+        </a>
+        <span class="crawl-sep">•</span>
+      </span>
+    `;
+
+    crawlContent.innerHTML = fallback;
+    crawlClone.innerHTML = fallback;
+    resetCrawlAnimation();
+  }
+}
+
+loadCrawl();
+setInterval(loadCrawl, 300000);
